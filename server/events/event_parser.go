@@ -96,6 +96,8 @@ type CommentCommand struct {
 	AutoMergeDisabled bool
 	// Verbose is true if the command should output verbosely.
 	Verbose bool
+	// Draft is true if the command should only draft a plan
+	Draft bool
 	// Workspace is the name of the Terraform workspace to run the command in.
 	// If empty then the comment specified no workspace.
 	Workspace string
@@ -122,6 +124,11 @@ func (c CommentCommand) IsVerbose() bool {
 	return c.Verbose
 }
 
+// IsDraft is true if the command should draft a plan.
+func (c CommentCommand) IsDraft() bool {
+	return c.Draft
+}
+
 // IsAutoplan will be false for comment commands.
 func (c CommentCommand) IsAutoplan() bool {
 	return false
@@ -133,7 +140,7 @@ func (c CommentCommand) String() string {
 }
 
 // NewCommentCommand constructs a CommentCommand, setting all missing fields to defaults.
-func NewCommentCommand(repoRelDir string, flags []string, name command.Name, verbose, autoMergeDisabled bool, workspace string, project string) *CommentCommand {
+func NewCommentCommand(repoRelDir string, flags []string, name command.Name, verbose, autoMergeDisabled bool, draft bool, workspace string, project string) *CommentCommand {
 	// If repoRelDir was empty we want to keep it that way to indicate that it
 	// wasn't specified in the comment.
 	if repoRelDir != "" {
@@ -149,6 +156,7 @@ func NewCommentCommand(repoRelDir string, flags []string, name command.Name, ver
 		Verbose:           verbose,
 		Workspace:         workspace,
 		AutoMergeDisabled: autoMergeDisabled,
+		Draft:             draft,
 		ProjectName:       project,
 	}
 }
